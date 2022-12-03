@@ -1,4 +1,6 @@
-with open("2022/Day 1/data.txt", "r") as file:
+INPUTFILE = "2022/Day 1/data.txt"
+
+with open(INPUTFILE, "r") as file:
     data = file.read()
 
 sums = []
