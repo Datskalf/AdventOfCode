@@ -1,4 +1,4 @@
-INPUTFILE = "2022/Day 1/data.txt"
+INPUTFILE = "2022/data.txt"
 
 with open(INPUTFILE, "r") as file:
     data = file.read()

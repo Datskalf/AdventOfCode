@@ -1,4 +1,4 @@
-INPUTFILE = "2022/Day 3/data.txt"
+INPUTFILE = "2022/data.txt"
 
 import string
 

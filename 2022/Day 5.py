@@ -1,13 +1,11 @@
 import re
-from pprint import pprint
 
-INPUTFILE = "2022/Day 5/data.txt"
+INPUTFILE = "2022/data.txt"
 
 with open(INPUTFILE, "r") as file:
     data = file.read().split("\n")
 
 cargo = []
-stacks = []
 
 for line in data:
     listline = [*line]
@@ -24,18 +22,22 @@ for line in data:
 
     cargo.append(listline)
 
+
+
+
+
+
+stacks = []
+
 for i in range(len(cargo[0])):
     stacks.append([])
     for j in reversed(range(len(cargo))):
         stacks[i].append(cargo[j][i])
 
-
 for stack in stacks:
     for i in reversed(range(len(stack))):
         if stack[i] == " ":
             stack.pop(i)
-
-
 
 startInstructions = False
 for line in data:
@@ -46,7 +48,6 @@ for line in data:
         continue
 
     instructions = re.findall(r'\d+', line)
-    
 
     for iters in range(int(instructions[0])):
         crate = stacks[int(instructions[1])-1].pop(-1)
@@ -58,13 +59,16 @@ for stack in stacks:
 print()
 
 
+
+
+
+
 stacks = []
 
 for i in range(len(cargo[0])):
     stacks.append([])
     for j in reversed(range(len(cargo))):
         stacks[i].append(cargo[j][i])
-
 
 for stack in stacks:
     for i in reversed(range(len(stack))):
