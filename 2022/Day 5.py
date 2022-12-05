@@ -1,4 +1,5 @@
 import re
+import copy
 
 INPUTFILE = "2022/data.txt"
 
@@ -6,91 +7,60 @@ with open(INPUTFILE, "r") as file:
     data = file.read().split("\n")
 
 cargo = []
+instructions = []
+stillInstruction = True
 
-for line in data:
+for line in reversed(data):
     listline = [*line]
 
-    for i in reversed(range(3, len(listline), 4)):
-        listline.pop(i)
-    for i in reversed(range(0, len(listline), 3)):
-        listline.pop(i)
-    for i in reversed(range(1, len(listline), 2)):
-        listline.pop(i)
-
-    if listline[0] == "1":
-        break
-
-    cargo.append(listline)
-
-
-
-
-
-
-stacks = []
-
-for i in range(len(cargo[0])):
-    stacks.append([])
-    for j in reversed(range(len(cargo))):
-        stacks[i].append(cargo[j][i])
-
-for stack in stacks:
-    for i in reversed(range(len(stack))):
-        if stack[i] == " ":
-            stack.pop(i)
-
-startInstructions = False
-for line in data:
-    if len(line) == 0:
-        startInstructions = True
+    if len(listline) == 0:
+        stillInstruction = False
         continue
-    if not startInstructions:
+    if listline[0] == " ":
         continue
 
-    instructions = re.findall(r'\d+', line)
+    if stillInstruction:
+        instructions.append([int(n) for n in re.findall('\d+', line)])
+    else:
+        cargo.append(listline[1::4])
 
-    for iters in range(int(instructions[0])):
-        crate = stacks[int(instructions[1])-1].pop(-1)
-        stacks[int(instructions[2])-1].append(crate)
+load = []
+for i, layer in enumerate(cargo):
+    for j, element in enumerate(layer):
+        if len(load) < j+1:
+            load.append([])
+        if element == " ":
+            continue
+        load[j].append(element)
 
-print("Part 1: ", end="")
-for stack in stacks:
-    print(stack[-1], end="")
-print()
-
-
-
-
+instructions.reverse()
 
 
-stacks = []
 
-for i in range(len(cargo[0])):
-    stacks.append([])
-    for j in reversed(range(len(cargo))):
-        stacks[i].append(cargo[j][i])
 
-for stack in stacks:
-    for i in reversed(range(len(stack))):
-        if stack[i] == " ":
-            stack.pop(i)
+rearrangedLoad = copy.deepcopy(load)
 
-startInstructions = False
-for line in data:
-    if len(line) == 0:
-        startInstructions = True
-        continue
-    if not startInstructions:
-        continue
-
-    instructions = re.findall(r'\d+', line)
+for instruction in instructions:
+    ins = [instruction[0], instruction[1]-1, instruction[2]-1]
     
-    idx = len(stacks[int(instructions[1])-1]) - int(instructions[0])
-    for _ in range(int(instructions[0])):
-        crate = stacks[int(instructions[1])-1].pop(idx)
-        stacks[int(instructions[2])-1].append(crate)
+    for _ in range(ins[0]):
+        crate = rearrangedLoad[ins[1]].pop(-1)
+        rearrangedLoad[ins[2]].append(crate)
 
-print("Part 2: ", end="")
-for stack in stacks:
-    print(stack[-1], end="")
-print()
+result = "".join([stack[-1] for stack in rearrangedLoad])
+print(f"Part 1: {result}")
+
+
+
+rearrangedLoad = copy.deepcopy(load)
+
+for instruction in instructions:
+    ins = [instruction[0], instruction[1]-1, instruction[2]-1]
+    
+    idx = len(rearrangedLoad[ins[1]])-ins[0]
+    for _ in range(ins[0]):
+        crate = rearrangedLoad[ins[1]].pop(idx)
+        rearrangedLoad[ins[2]].append(crate)
+
+result = "".join([stack[-1] for stack in rearrangedLoad])
+print(f"Part 2: {result}")
